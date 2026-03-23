@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UHIP Nexus — Healthcare Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #1a1a1a;
+    --surface: #2a2a2a;
+    --surface2: #3a3a3a;
+    --border: #444444;
+    --accent: #2563eb;
+    --accent2: #0ea5e9;
+    --accent3: #6366f1;
+    --green: #10b981;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --text: #ffffff;
+    --text2: #cccccc;
+    --text3: #aaaaaa;
+    --shadow: 0 2px 16px rgba(0,0,0,0.3);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── LANDING PAGE ── */
+  #landing {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #3a3a3a 100%);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 48px;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 1.35rem; font-weight: 700; color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--text); font-family: 'Instrument Serif', serif; font-style: italic; }
+
+  .logo-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px 40px;
+    gap: 16px;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(37,99,235,0.2); border: 1px solid rgba(37,99,235,0.4);
+    color: var(--accent); border-radius: 999px;
+    padding: 6px 16px; font-size: 0.82rem; font-weight: 600;
+    letter-spacing: 0.02em;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 400;
+    line-height: 1.12;
+    color: var(--text);
+    max-width: 740px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+
+  .hero p {
+    font-size: 1.08rem; color: var(--text2); max-width: 520px;
+    line-height: 1.7;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .hero-cards {
+    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    margin-top: 20px;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+
+  .portal-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    width: 220px;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+  .portal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
+  }
+  .portal-card .icon {
+    width: 54px; height: 54px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+  }
+  .icon-doc  { background: linear-gradient(135deg,#1e3a8a,#3b82f6); }
+  .icon-pat  { background: linear-gradient(135deg,#065f46,#10b981); }
+  .icon-emg  { background: linear-gradient(135deg,#991b1b,#ef4444); }
+  .icon-ai   { background: linear-gradient(135deg,#5b21b6,#8b5cf6); }
+  .icon-icu  { background: linear-gradient(135deg,#92400e,#f59e0b); }
+  .icon-med  { background: linear-gradient(135deg,#0c4a6e,#0ea5e9); }
+
+  .portal-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+  .portal-card p  { font-size: 0.78rem; color: var(--text2); text-align: center; line-height: 1.5; }
+
+  /* ── SCREENS (hidden by default) ── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ── AUTH FORM ── */
+  .auth-wrap {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 40px 24px;
+    background: linear-gradient(135deg,#1a1a1a,#2a2a2a,#3a3a3a);
+  }
+
+  .auth-box {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 24px;
+    padding: 44px 40px;
+    width: 100%; max-width: 420px;
+    box-shadow: var(--shadow-lg);
+    animation: fadeUp 0.5s ease;
+  }
+
+  .auth-box .auth-icon {
+    width: 60px; height: 60px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; margin-bottom: 16px;
+  }
+
+  .auth-box h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.8rem; font-weight: 400; margin-bottom: 4px;
+  }
+
+  .auth-box .sub { color: var(--text2); font-size: 0.88rem; margin-bottom: 28px; }
+
+  label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
+
+  input, select {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
+    color: var(--text); background: var(--bg);
+    outline: none; transition: border 0.18s;
+    margin-bottom: 16px;
+  }
+  input:focus, select:focus { border-color: var(--accent); background: var(--surface); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 24px; border-radius: var(--radius-sm);
+    font-size: 0.95rem; font-weight: 600; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; border: none; transition: all 0.18s;
+  }
+  .btn-primary { background: var(--accent); color: #fff; width: 100%; }
+  .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(37,99,235,0.3); }
+  .btn-back {
+    background: transparent; color: var(--text2); font-size: 0.85rem;
+    padding: 8px 0; margin-bottom: 20px;
+    border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-back:hover { color: var(--accent); }
+
+  /* ── DASHBOARD LAYOUT ── */
+  .dash-layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 240px; flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1.5px solid var(--border);
+    display: flex; flex-direction: column;
+    padding: 0;
+  }
+
+  .sidebar-logo {
+    padding: 22px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 1.1rem; color: var(--accent);
+  }
+
+  .sidebar-logo .logo-icon { width: 30px; height: 30px; border-radius: 8px; font-size: 15px; }
+
+  .sidebar-nav { flex: 1; padding: 16px 10px; display: flex; flex-direction: column; gap: 2px; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    font-size: 0.88rem; font-weight: 500; color: var(--text2);
+    cursor: pointer; transition: all 0.15s;
+    border: none; background: none; font-family: 'DM Sans', sans-serif;
+    width: 100%; text-align: left;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: rgba(37,99,235,0.09); color: var(--accent); font-weight: 600; }
+  .nav-item span { font-size: 16px; }
+
+  .sidebar-footer {
+    padding: 16px 10px;
+    border-top: 1px solid var(--border);
+  }
+  .user-chip {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    background: var(--surface2);
+  }
+  .avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+  }
+  .user-chip .info .name { font-size: 0.85rem; font-weight: 600; }
+  .user-chip .info .role { font-size: 0.75rem; color: var(--text3); }
+
+  .dash-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  .topbar {
+    background: var(--surface); border-bottom: 1.5px solid var(--border);
+    padding: 16px 32px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar h2 { font-size: 1.12rem; font-weight: 700; }
+  .topbar .meta { font-size: 0.82rem; color: var(--text3); }
+
+  .topbar-actions { display: flex; gap: 10px; align-items: center; }
+  .badge-pill {
+    background: rgba(239,68,68,0.1); color: var(--red);
+    border-radius: 999px; padding: 4px 12px; font-size: 0.78rem; font-weight: 600;
+  }
+
+  .dash-content { flex: 1; overflow-y: auto; padding: 28px 32px; }
+
+  /* ── CARDS ── */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 28px; }
+
+  .stat-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 22px 20px;
+    box-shadow: var(--shadow);
+  }
+  .stat-card .s-label { font-size: 0.78rem; color: var(--text2); margin-bottom: 8px; font-weight: 600; }
+  .stat-card .s-val { font-size: 1.9rem; font-weight: 700; color: var(--text); font-family: 'Instrument Serif', serif; }
+  .stat-card .s-sub { font-size: 0.78rem; color: var(--text3); margin-top: 4px; }
+  .stat-card.accent { background: linear-gradient(135deg,var(--accent),var(--accent2)); border-color: transparent; }
+  .stat-card.accent .s-label, .stat-card.accent .s-val, .stat-card.accent .s-sub { color: #fff; }
+
+  .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 14px; color: var(--text); }
+
+  .card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 22px 24px;
+    box-shadow: var(--shadow); margin-bottom: 20px;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .timeline-item {
+    display: flex; gap: 14px; padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .tl-dot {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+    margin-top: 2px;
+  }
+  .tl-dot.green { background: rgba(16,185,129,0.12); }
+  .tl-dot.blue  { background: rgba(37,99,235,0.10); }
+  .tl-dot.amber { background: rgba(245,158,11,0.12); }
+  .tl-dot.red   { background: rgba(239,68,68,0.10); }
+
+  .tl-body .tl-head { font-size: 0.9rem; font-weight: 600; }
+  .tl-body .tl-date { font-size: 0.78rem; color: var(--text3); margin-top: 2px; }
+  .tl-body .tl-note { font-size: 0.83rem; color: var(--text2); margin-top: 4px; line-height: 1.5; }
+
+  .commit-hash {
+    font-size: 0.72rem; background: var(--surface2); color: var(--accent);
+    border-radius: 6px; padding: 2px 8px; font-family: monospace;
+    display: inline-block; margin-top: 4px;
+  }
+
+  /* ── AI PANEL ── */
+  .ai-result {
+    background: linear-gradient(135deg,#f0f4ff,#f0f9ff);
+    border: 1.5px solid #c7d7f8;
+    border-radius: var(--radius); padding: 20px 22px;
+    margin-top: 14px; display: none;
+    animation: fadeUp 0.4s ease;
+  }
+  .ai-result.show { display: block; }
+  .ai-result .ai-label { font-size: 0.75rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.06em; }
+  .ai-result .ai-text { font-size: 0.9rem; color: var(--text2); line-height: 1.65; }
+
+  .risk-bar-wrap { margin-top: 12px; }
+  .risk-bar-label { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
+  .risk-bar { height: 8px; border-radius: 999px; background: var(--border); overflow: hidden; }
+  .risk-fill { height: 100%; border-radius: 999px; transition: width 0.8s ease; }
+
+  /* ── ALERT BANNER ── */
+  .alert-banner {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(239,68,68,0.07); border: 1.5px solid rgba(239,68,68,0.2);
+    border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 20px;
+  }
+  .alert-banner .a-icon { font-size: 22px; }
+  .alert-banner .a-text .a-title { font-size: 0.88rem; font-weight: 700; color: var(--red); }
+  .alert-banner .a-text .a-sub { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
+
+  /* ── BED TABLE ── */
+  .bed-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+  .bed-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 16px 18px;
+    box-shadow: var(--shadow);
+  }
+  .bed-card .hospital { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+  .bed-card .dist { font-size: 0.77rem; color: var(--text3); margin-top: 2px; }
+  .bed-card .beds {
+    margin-top: 10px; font-size: 1.4rem; font-weight: 700;
+    font-family: 'Instrument Serif', serif;
+  }
+  .bed-card .beds.ok { color: var(--green); }
+  .bed-card .beds.warn { color: var(--amber); }
+  .bed-card .beds.crit { color: var(--red); }
+  .bed-card .beds-label { font-size: 0.76rem; color: var(--text3); }
+
+  .pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+    margin-right: 6px; animation: pulse 1.5s infinite;
+  }
+  .pulse-dot.green { background: var(--green); }
+  .pulse-dot.red   { background: var(--red); }
+  .pulse-dot.amber { background: var(--amber); }
+
+  /* ── FORM GRID ── */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+  .tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    border-radius: 999px; padding: 4px 12px; font-size: 0.76rem; font-weight: 600;
+  }
+  .tag-green { background: rgba(16,185,129,0.1); color: var(--green); }
+  .tag-red   { background: rgba(239,68,68,0.1); color: var(--red); }
+  .tag-blue  { background: rgba(37,99,235,0.1); color: var(--accent); }
+  .tag-amber { background: rgba(245,158,11,0.1); color: var(--amber); }
+
+  /* ── MEDICINE CHECK ── */
+  .drug-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .drug-tag {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 14px; font-size: 0.83rem;
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+  }
+  .drug-tag:hover { border-color: var(--red); color: var(--red); }
+  .drug-tag .remove { font-size: 12px; color: var(--text3); }
+
+  textarea {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
+    color: var(--text); background: var(--bg);
+    resize: vertical; outline: none; transition: border 0.18s;
+    min-height: 80px;
+  }
+  textarea:focus { border-color: var(--accent); background: #fff; }
+
+  /* ── EMERGENCY MAP VISUAL ── */
+  .map-mock {
+    background: linear-gradient(135deg,#e8f5e9,#e3f2fd);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius); height: 200px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; margin-bottom: 16px;
+  }
+  .map-mock::before {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(37,99,235,0.05) 30px),
+                repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(37,99,235,0.05) 30px);
+  }
+  .map-pin { font-size: 2.5rem; animation: bounce 1.2s ease infinite alternate; }
+  .map-label { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 16px; font-size: 0.8rem; font-weight: 600; color: var(--accent); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.5; transform: scale(0.75); }
+  }
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-10px); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .top-nav { padding: 16px 20px; }
+    .dash-content { padding: 18px 16px; }
+    .topbar { padding: 14px 16px; }
+    .auth-box { padding: 30px 22px; }
+  }
+
+  /* ── LOADING SPINNER ── */
+  .spinner {
+    width: 20px; height: 20px; border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hidden { display: none !important; }
+
+  /* Patient vitals grid */
+  .vitals-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 12px; margin-bottom: 20px; }
+  .vital-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 16px; box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .vital-card .v-icon { font-size: 20px; }
+  .vital-card .v-val { font-size: 1.4rem; font-weight: 700; color: var(--text); margin: 4px 0; font-family: 'Instrument Serif', serif; }
+  .vital-card .v-label { font-size: 0.74rem; color: var(--text3); }
+
+  /* divider */
+  .divider { height: 1px; background: var(--border); margin: 18px 0; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  LANDING PAGE                                             -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="landing">
+  <nav class="top-nav">
+    <div class="logo">
+      
+      UHIP <span>Nexus</span>
+    </div>
+    <div style="font-size:0.82rem;color:var(--text2);">Healthcare Intelligence Platform</div>
+  </nav>
+
+  <div class="hero">
+    
+    <h1>The <em>Operating System</em> for Modern Healthcare</h1>
+    <p>Predictive, preventive & collaborative healthcare network. Select your portal to continue.</p>
+
+    <div class="hero-cards">
+      <div class="portal-card" onclick="showAuth('doctor')">
+        <div class="icon icon-doc">👨‍⚕️</div>
+        <h3>Doctor Portal</h3>
+        <p>Manage patients, view timelines & AI alerts</p>
+      </div>
+      <div class="portal-card" onclick="showAuth('patient')">
+        <div class="icon icon-pat">🧑‍🦰</div>
+        <h3>Patient Portal</h3>
+        <p>Your health records, prescriptions & consent</p>
+      </div>
+      <div class="portal-card" onclick="showAuth('emergency')">
+        <div class="icon icon-emg">🚑</div>
+        <h3>Pre-Med Emergency</h3>
+        <p>Ambulance vitals upload & hospital routing</p>
+      </div>
+      <div class="portal-card" onclick="showAuth('ai')">
+        <div class="icon icon-ai">🤖</div>
+        <h3>AI Medicine Check</h3>
+        <p>Drug conflict detection & risk analysis</p>
+      </div>
+      <div class="portal-card" onclick="showAuth('icu')">
+        <div class="icon icon-icu">🏨</div>
+        <h3>ICU Beds Near Me</h3>
+        <p>Real-time hospital capacity & routing</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  AUTH SCREEN                                              -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="auth-screen" class="screen">
+  <div class="auth-wrap">
+    <div class="auth-box" id="auth-box">
+      <!-- filled dynamically -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  DOCTOR DASHBOARD                                         -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="doctor-dash" class="screen">
+  <div class="dash-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🏥</div> UHIP Nexus
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" onclick="docTab('overview',this)"><span>📊</span> Overview</button>
+        <button class="nav-item" onclick="docTab('patients',this)"><span>👥</span> My Patients</button>
+        <button class="nav-item" onclick="docTab('timeline',this)"><span>📜</span> EHR Timeline</button>
+        <button class="nav-item" onclick="docTab('alerts',this)"><span>⚠️</span> AI Alerts</button>
+        <button class="nav-item" onclick="docTab('commit',this)"><span>➕</span> New Update</button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-chip">
+          <div class="avatar" id="doc-avatar">DR</div>
+          <div class="info">
+            <div class="name" id="doc-name-chip">Dr. User</div>
+            <div class="role">Physician</div>
+          </div>
+        </div>
+        <button class="btn-back" style="margin-top:10px;padding-left:12px;" onclick="logout()">← Logout</button>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <div class="topbar">
+        <div>
+          <div class="topbar h2" id="doc-tab-title" style="font-size:1.12rem;font-weight:700;">Overview</div>
+          <div class="meta" id="doc-date"></div>
+        </div>
+        <div class="topbar-actions">
+          <span class="badge-pill">🚨 2 Critical Alerts</span>
+        </div>
+      </div>
+
+      <div class="dash-content">
+
+        <!-- OVERVIEW TAB -->
+        <div id="tab-overview">
+          <div class="stats-row">
+            <div class="stat-card accent">
+              <div class="s-label">Total Patients</div>
+              <div class="s-val">24</div>
+              <div class="s-sub">↑ 3 new this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="s-label">Appointments Today</div>
+              <div class="s-val">6</div>
+              <div class="s-sub">Next at 2:30 PM</div>
+            </div>
+            <div class="stat-card">
+              <div class="s-label">AI Alerts</div>
+              <div class="s-val" style="color:var(--red)">2</div>
+              <div class="s-sub">Drug conflicts detected</div>
+            </div>
+            <div class="stat-card">
+              <div class="s-label">EHR Commits</div>
+              <div class="s-val">143</div>
+              <div class="s-sub">Full history preserved</div>
+            </div>
+          </div>
+
+          <div class="alert-banner">
+            <div class="a-icon">⚠️</div>
+            <div class="a-text">
+              <div class="a-title">Drug Conflict Detected — Patient Raj Mehta</div>
+              <div class="a-sub">Aspirin + Warfarin combination flagged as high-risk interaction. Review immediately.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title">Recent Patient Activity</div>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="tl-dot green">✅</div>
+                <div class="tl-body">
+                  <div class="tl-head">Priya Sharma — Prescription Updated</div>
+                  <div class="tl-date">Today, 10:14 AM</div>
+                  <div class="commit-hash">#a3f92c1</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="tl-dot red">🚨</div>
+                <div class="tl-body">
+                  <div class="tl-head">Raj Mehta — Conflict Detected</div>
+                  <div class="tl-date">Today, 9:42 AM</div>
+                  <div class="tl-note">Aspirin + Warfarin flagged by AI conflict engine.</div>
+                  <div class="commit-hash">#b72d441</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="tl-dot blue">📋</div>
+                <div class="tl-body">
+                  <div class="tl-head">Aman Verma — Lab Results Uploaded</div>
+                  <div class="tl-date">Yesterday, 3:55 PM</div>
+                  <div class="commit-hash">#c18fa20</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="tl-dot amber">🏥</div>
+                <div class="tl-body">
+                  <div class="tl-head">Sneha Pillai — Discharged</div>
+                  <div class="tl-date">Yesterday, 11:00 AM</div>
+                  <div class="commit-hash">#d4e5b99</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PATIENTS TAB -->
+        <div id="tab-patients" class="hidden">
+          <div class="card">
+            <div class="section-title">My Patients</div>
+            <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+              <thead>
+                <tr style="border-bottom:2px solid var(--border);">
+                  <th style="text-align:left;padding:10px 12px;color:var(--text2);font-weight:600;">Patient</th>
+                  <th style="text-align:left;padding:10px 12px;color:var(--text2);font-weight:600;">ID</th>
+                  <th style="text-align:left;padding:10px 12px;color:var(--text2);font-weight:600;">Condition</th>
+                  <th style="text-align:left;padding:10px 12px;color:var(--text2);font-weight:600;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:10px 12px;font-weight:600;">Priya Sharma</td>
+                  <td style="padding:10px 12px;color:var(--text3);font-family:monospace;">PAT-001</td>
+                  <td style="padding:10px 12px;">Hypertension</td>
+                  <td style="padding:10px 12px;"><span class="tag tag-green">✓ Stable</span></td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:10px 12px;font-weight:600;">Raj Mehta</td>
+                  <td style="padding:10px 12px;color:var(--text3);font-family:monospace;">PAT-002</td>
+                  <td style="padding:10px 12px;">Cardiac Risk</td>
+                  <td style="padding:10px 12px;"><span class="tag tag-red">⚠ Alert</span></td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:10px 12px;font-weight:600;">Aman Verma</td>
+                  <td style="padding:10px 12px;color:var(--text3);font-family:monospace;">PAT-003</td>
+                  <td style="padding:10px 12px;">Diabetes Type 2</td>
+                  <td style="padding:10px 12px;"><span class="tag tag-amber">~ Monitor</span></td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 12px;font-weight:600;">Sneha Pillai</td>
+                  <td style="padding:10px 12px;color:var(--text3);font-family:monospace;">PAT-004</td>
+                  <td style="padding:10px 12px;">Recovered</td>
+                  <td style="padding:10px 12px;"><span class="tag tag-blue">✓ Discharged</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TIMELINE TAB -->
+        <div id="tab-timeline" class="hidden">
+          <div class="card">
+            <div class="section-title">Git-Style EHR Timeline — Patient: Raj Mehta</div>
+            <p style="font-size:0.83rem;color:var(--text2);margin-bottom:16px;">Every update is a commit. Full history preserved. No overwrites.</p>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="tl-dot red">💊</div>
+                <div class="tl-body">
+                  <div class="tl-head">Prescription: Aspirin 75mg + Warfarin 5mg</div>
+                  <div class="tl-date">12 Mar 2025 — Dr. Anand</div>
+                  <div class="tl-note">⚠️ AI conflict flagged: bleeding risk elevated.</div>
+                  <div class="commit-hash">#b72d441 ← parent: #a91e332</div>
+                  <span class="tag tag-red" style="margin-top:6px;">CONFLICT</span>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="tl-dot blue">🩺</div>
+                <div class="tl-body">
+                  <div class="tl-head">Diagnosis: Atrial Fibrillation confirmed</div>
+                  <div class="tl-date">10 Mar 2025 — Dr. Anand</div>
+                  <div class="tl-note">ECG report attached. Referred to cardiologist.</div>
+                  <div class="commit-hash">#a91e332 ← parent: #8f3c211</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="tl-dot amber">🏥</div>
+                <div class="tl-body">
+                  <div class="tl-head">ER Visit — Chest pain, HR 142bpm</div>
+                  <div class="tl-date">8 Mar 2025 — City Hospital ER</div>
+                  <div class="tl-note">Admitted for observation. BP: 158/96.</div>
+                  <div class="commit-hash">#8f3c211 ← parent: #7b2a100</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="tl-dot green">💉</div>
+                <div class="tl-body">
+                  <div class="tl-head">Routine Checkup — All clear</div>
+                  <div class="tl-date">1 Jan 2025 — Dr. Anand</div>
+                  <div class="tl-note">Annual physical. BP: 128/82. No concerns.</div>
+                  <div class="commit-hash">#7b2a100 ← root</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALERTS TAB -->
+        <div id="tab-alerts" class="hidden">
+          <div class="alert-banner">
+            <div class="a-icon">🚨</div>
+            <div class="a-text">
+              <div class="a-title">HIGH RISK — Raj Mehta (PAT-002)</div>
+              <div class="a-sub">Aspirin + Warfarin co-prescription detected. Increased bleeding risk. Action required.</div>
+            </div>
+          </div>
+          <div class="alert-banner" style="background:rgba(245,158,11,0.07);border-color:rgba(245,158,11,0.25);">
+            <div class="a-icon">⚠️</div>
+            <div class="a-text">
+              <div class="a-title" style="color:var(--amber);">MODERATE — Aman Verma (PAT-003)</div>
+              <div class="a-sub">HbA1c above threshold for 3 consecutive months. Medication adjustment recommended.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title">AI Risk Score — Raj Mehta</div>
+            <div class="risk-bar-wrap">
+              <div class="risk-bar-label"><span>Cardiac Risk</span><span style="color:var(--red)">82%</span></div>
+              <div class="risk-bar"><div class="risk-fill" style="width:82%;background:var(--red);"></div></div>
+            </div>
+            <div class="risk-bar-wrap" style="margin-top:12px;">
+              <div class="risk-bar-label"><span>Drug Interaction Risk</span><span style="color:var(--amber)">67%</span></div>
+              <div class="risk-bar"><div class="risk-fill" style="width:67%;background:var(--amber);"></div></div>
+            </div>
+            <div class="risk-bar-wrap" style="margin-top:12px;">
+              <div class="risk-bar-label"><span>Hospitalisation Risk</span><span style="color:var(--accent)">45%</span></div>
+              <div class="risk-bar"><div class="risk-fill" style="width:45%;background:var(--accent);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEW COMMIT TAB -->
+        <div id="tab-commit" class="hidden">
+          <div class="card">
+            <div class="section-title">➕ Create New Medical Update (Commit)</div>
+            <p style="font-size:0.83rem;color:var(--text2);margin-bottom:20px;">This will be added as a new version to the patient's immutable EHR history.</p>
+            <div class="form-row">
+              <div>
+                <label>Patient ID</label>
+                <input type="text" placeholder="e.g. PAT-002"/>
+              </div>
+              <div>
+                <label>Update Type</label>
+                <select>
+                  <option>Prescription</option>
+                  <option>Diagnosis</option>
+                  <option>Lab Result</option>
+                  <option>Discharge</option>
+                  <option>Observation</option>
+                </select>
+              </div>
+            </div>
+            <label>Clinical Notes</label>
+            <textarea placeholder="Enter your clinical notes here..."></textarea>
+            <label>Medications (if any)</label>
+            <input type="text" placeholder="e.g. Paracetamol 500mg twice daily"/>
+            <button class="btn btn-primary" onclick="createCommit()">
+              <span>📝</span> Commit Update
+            </button>
+            <div id="commit-success" class="ai-result" style="background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.25);">
+              <div class="ai-label" style="color:var(--green);">✅ COMMIT SUCCESSFUL</div>
+              <div class="ai-text">New medical update has been committed to the EHR blockchain. Hash: <span style="font-family:monospace;color:var(--accent);">#e9a1c3f</span>. Parent: <span style="font-family:monospace;">#b72d441</span>. Full history preserved.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  PATIENT DASHBOARD                                        -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="patient-dash" class="screen">
+  <div class="dash-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🏥</div> UHIP Nexus
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" onclick="patTab('overview',this)"><span>📊</span> My Health</button>
+        <button class="nav-item" onclick="patTab('records',this)"><span>📜</span> Health Records</button>
+        <button class="nav-item" onclick="patTab('prescriptions',this)"><span>💊</span> Prescriptions</button>
+        <button class="nav-item" onclick="patTab('consent',this)"><span>🔐</span> Consent & Access</button>
+        <button class="nav-item" onclick="patTab('translator',this)"><span>🗣️</span> Prescription Translator</button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-chip">
+          <div class="avatar" id="pat-avatar">P</div>
+          <div class="info">
+            <div class="name" id="pat-name-chip">Patient</div>
+            <div class="role">Patient Portal</div>
+          </div>
+        </div>
+        <button class="btn-back" style="margin-top:10px;padding-left:12px;" onclick="logout()">← Logout</button>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <div class="topbar">
+        <div>
+          <div style="font-size:1.12rem;font-weight:700;" id="pat-tab-title">My Health Overview</div>
+          <div class="meta" id="pat-date"></div>
+        </div>
+      </div>
+      <div class="dash-content">
+
+        <!-- OVERVIEW -->
+        <div id="ptab-overview">
+          <div class="vitals-row">
+            <div class="vital-card">
+              <div class="v-icon">❤️</div>
+              <div class="v-val">72</div>
+              <div class="v-label">Heart Rate (bpm)</div>
+            </div>
+            <div class="vital-card">
+              <div class="v-icon">🩸</div>
+              <div class="v-val">118/76</div>
+              <div class="v-label">Blood Pressure</div>
+            </div>
+            <div class="vital-card">
+              <div class="v-icon">🌡️</div>
+              <div class="v-val">98.4°</div>
+              <div class="v-label">Temperature (F)</div>
+            </div>
+            <div class="vital-card">
+              <div class="v-icon">💧</div>
+              <div class="v-val">98%</div>
+              <div class="v-label">SpO₂</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title">Upcoming Appointments</div>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="tl-dot blue">📅</div>
+                <div class="tl-body">
+                  <div class="tl-head">Dr. Anand — Cardiology Follow-up</div>
+                  <div class="tl-date">20 March 2025, 10:00 AM</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="tl-dot amber">🔬</div>
+                <div class="tl-body">
+                  <div class="tl-head">HbA1c Blood Test</div>
+                  <div class="tl-date">22 March 2025, 8:30 AM</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECORDS -->
+        <div id="ptab-records" class="hidden">
+          <div class="card">
+            <div class="section-title">My Health Timeline</div>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="tl-dot green">💊</div>
+                <div class="tl-body">
+                  <div class="tl-head">Prescription: Metformin 500mg</div>
+                  <div class="tl-date">12 Mar 2025 — Dr. Anand (City Hospital)</div>
+                  <div class="commit-hash">#e3a2c19</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="tl-dot blue">🩺</div>
+                <div class="tl-body">
+                  <div class="tl-head">Diagnosis: Pre-diabetic — HbA1c 6.1</div>
+                  <div class="tl-date">5 Mar 2025 — Apollo Clinic</div>
+                  <div class="commit-hash">#d1f8a04</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="tl-dot amber">🏥</div>
+                <div class="tl-body">
+                  <div class="tl-head">Annual Checkup — Normal results</div>
+                  <div class="tl-date">Jan 2025 — Primary Clinic</div>
+                  <div class="commit-hash">#b2e9c33</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRESCRIPTIONS -->
+        <div id="ptab-prescriptions" class="hidden">
+          <div class="card">
+            <div class="section-title">Current Prescriptions</div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
+                <div>
+                  <div style="font-weight:600;font-size:0.9rem;">Metformin 500mg</div>
+                  <div style="font-size:0.8rem;color:var(--text2);">Twice daily after meals · 30 days</div>
+                </div>
+                <span class="tag tag-green">Active</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
+                <div>
+                  <div style="font-weight:600;font-size:0.9rem;">Vitamin D3 60000 IU</div>
+                  <div style="font-size:0.8rem;color:var(--text2);">Once weekly · 8 weeks</div>
+                </div>
+                <span class="tag tag-green">Active</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);opacity:0.6;">
+                <div>
+                  <div style="font-weight:600;font-size:0.9rem;">Aspirin 75mg</div>
+                  <div style="font-size:0.8rem;color:var(--text2);">Once daily · Completed</div>
+                </div>
+                <span class="tag tag-blue">Completed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONSENT -->
+        <div id="ptab-consent" class="hidden">
+          <div class="card">
+            <div class="section-title">🔐 Data Consent Control</div>
+            <p style="font-size:0.83rem;color:var(--text2);margin-bottom:16px;">Control who can access your health records.</p>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
+                <div>
+                  <div style="font-weight:600;font-size:0.9rem;">Dr. Anand — Cardiologist</div>
+                  <div style="font-size:0.78rem;color:var(--text3);">City Hospital · Last accessed: Today</div>
+                </div>
+                <span class="tag tag-green">✓ Allowed</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
+                <div>
+                  <div style="font-weight:600;font-size:0.9rem;">Apollo Clinic</div>
+                  <div style="font-size:0.78rem;color:var(--text3);">Lab results only · Last accessed: 5 days ago</div>
+                </div>
+                <span class="tag tag-amber">Limited</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);">
+                <div>
+                  <div style="font-weight:600;font-size:0.9rem;">Unknown Clinic (Request)</div>
+                  <div style="font-size:0.78rem;color:var(--text3);">Access requested on 10 Mar</div>
+                </div>
+                <span class="tag tag-red">⛔ Denied</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TRANSLATOR -->
+        <div id="ptab-translator" class="hidden">
+          <div class="card">
+            <div class="section-title">🗣️ Prescription Translator</div>
+            <p style="font-size:0.83rem;color:var(--text2);margin-bottom:16px;">Paste your prescription and get a simple, easy-to-understand explanation.</p>
+            <label>Your Prescription (medical terms)</label>
+            <textarea id="trans-input" placeholder="e.g. Tab. Metformin 500mg BD PC x 30/7, Cap. Vitamin D3 60000 IU OW x 8/52...">Tab. Metformin 500mg BD PC x 30/7
+Cap. Vitamin D3 60000 IU OW x 8/52</textarea>
+            <button class="btn btn-primary" style="margin-top:8px;" onclick="translatePrescription()">
+              🗣️ Translate to Simple Language
+            </button>
+            <div id="trans-result" class="ai-result">
+              <div class="ai-label">✅ SIMPLIFIED PRESCRIPTION</div>
+              <div class="ai-text">
+                <strong>💊 Metformin 500mg</strong> — Take 1 tablet <em>twice a day</em> (morning & night) <em>after eating</em>. Continue for <em>30 days</em>.<br><br>
+                <strong>💊 Vitamin D3 60000 IU</strong> — Take 1 capsule <em>once every week</em>. Continue for <em>8 weeks</em>.<br><br>
+                <em>💡 Tip: Always take Metformin with food to avoid stomach upset.</em>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  EMERGENCY / PRE-MED DASHBOARD                           -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="emergency-dash" class="screen">
+  <div class="dash-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🚑</div> Emergency</div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" onclick="emgTab('vitals',this)"><span>📡</span> Upload Vitals</button>
+        <button class="nav-item" onclick="emgTab('route',this)"><span>🏥</span> Hospital Routing</button>
+        <button class="nav-item" onclick="emgTab('crowd',this)"><span>📢</span> Crowd Alert</button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-back" style="padding-left:12px;" onclick="logout()">← Logout</button>
+      </div>
+    </aside>
+    <main class="dash-main">
+      <div class="topbar">
+        <div>
+          <div style="font-size:1.12rem;font-weight:700;" id="emg-tab-title">Upload Patient Vitals</div>
+          <div class="meta"><span class="pulse-dot red"></span>Live Emergency Mode</div>
+        </div>
+      </div>
+      <div class="dash-content">
+
+        <!-- VITALS -->
+        <div id="etab-vitals">
+          <div class="card">
+            <div class="section-title">📡 Real-Time Vitals Entry</div>
+            <div class="form-row">
+              <div><label>Patient Name</label><input type="text" placeholder="Patient name or Unknown"/></div>
+              <div><label>Age</label><input type="number" placeholder="e.g. 45"/></div>
+            </div>
+            <div class="form-row">
+              <div><label>Heart Rate (bpm)</label><input type="number" id="emg-hr" placeholder="e.g. 110"/></div>
+              <div><label>Blood Pressure</label><input type="text" id="emg-bp" placeholder="e.g. 160/100"/></div>
+            </div>
+            <div class="form-row">
+              <div><label>SpO₂ (%)</label><input type="number" id="emg-spo2" placeholder="e.g. 88"/></div>
+              <div><label>Temperature (°F)</label><input type="number" id="emg-temp" placeholder="e.g. 101.2"/></div>
+            </div>
+            <label>Chief Complaint</label>
+            <textarea id="emg-complaint" placeholder="e.g. Chest pain, difficulty breathing, unconscious..."></textarea>
+            <button class="btn btn-primary" onclick="analyzeVitals()">🤖 Analyse & Send Pre-Alert</button>
+            <div id="vitals-result" class="ai-result">
+              <div class="ai-label">🤖 AI RISK ASSESSMENT</div>
+              <div class="ai-text" id="vitals-text"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROUTING -->
+        <div id="etab-route" class="hidden">
+          <div class="map-mock">
+            <div>
+              <div class="map-pin">📍</div>
+            </div>
+            <div class="map-label">Current Location Detected</div>
+          </div>
+          <div class="section-title">Nearest Hospitals with ICU Availability</div>
+          <div class="bed-grid">
+            <div class="bed-card">
+              <div class="hospital">City General Hospital</div>
+              <div class="dist">1.2 km away</div>
+              <div class="beds ok">8</div>
+              <div class="beds-label"><span class="pulse-dot green"></span>ICU Beds Available</div>
+            </div>
+            <div class="bed-card">
+              <div class="hospital">Apollo Medical Centre</div>
+              <div class="dist">2.8 km away</div>
+              <div class="beds warn">3</div>
+              <div class="beds-label"><span class="pulse-dot amber"></span>ICU Beds Available</div>
+            </div>
+            <div class="bed-card">
+              <div class="hospital">AIIMS Emergency</div>
+              <div class="dist">4.1 km away</div>
+              <div class="beds crit">0</div>
+              <div class="beds-label"><span class="pulse-dot red"></span>ICU Full — Divert</div>
+            </div>
+          </div>
+          <div class="ai-result show" style="margin-top:16px;">
+            <div class="ai-label">🤖 AI ROUTING RECOMMENDATION</div>
+            <div class="ai-text">Best route: <strong>City General Hospital (1.2km)</strong> — 8 ICU beds available, trauma unit active. ETA: ~4 minutes. Pre-alert has been sent to ER team.</div>
+          </div>
+        </div>
+
+        <!-- CROWD ALERT -->
+        <div id="etab-crowd" class="hidden">
+          <div class="card">
+            <div class="section-title">📢 Emergency Crowd Alert System</div>
+            <p style="font-size:0.83rem;color:var(--text2);margin-bottom:18px;">Alert nearby community members to assist at the scene of an emergency.</p>
+            <label>Incident Type</label>
+            <select>
+              <option>Road Accident</option>
+              <option>Medical Emergency</option>
+              <option>Fire / Hazard</option>
+              <option>Missing Person</option>
+            </select>
+            <label>Location Description</label>
+            <input type="text" placeholder="e.g. Near Gandhi Chowk, Main Road, Indore"/>
+            <label>Additional Details</label>
+            <textarea placeholder="Describe the situation for helpers..."></textarea>
+            <button class="btn btn-primary" onclick="sendCrowdAlert()" style="background:var(--red);">
+              🚨 Send Crowd Alert
+            </button>
+            <div id="crowd-result" class="ai-result" style="background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.2);">
+              <div class="ai-label" style="color:var(--red);">🚨 ALERT BROADCAST</div>
+              <div class="ai-text">Emergency alert sent to <strong>34 nearby users</strong> within 500m radius. 3 users have confirmed response. Nearest first-aid trained responder is <strong>120m away</strong>.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  AI MEDICINE CHECK DASHBOARD                              -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="ai-dash" class="screen">
+  <div class="dash-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🤖</div> AI Med Check</div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" onclick="aiTab('conflict',this)"><span>💊</span> Drug Conflict</button>
+        <button class="nav-item" onclick="aiTab('risk',this)"><span>📊</span> Risk Predictor</button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-back" style="padding-left:12px;" onclick="logout()">← Logout</button>
+      </div>
+    </aside>
+    <main class="dash-main">
+      <div class="topbar">
+        <div style="font-size:1.12rem;font-weight:700;">AI Medicine Check</div>
+      </div>
+      <div class="dash-content">
+
+        <!-- CONFLICT -->
+        <div id="aitab-conflict">
+          <div class="card">
+            <div class="section-title">💊 Drug Conflict Detector</div>
+            <p style="font-size:0.83rem;color:var(--text2);margin-bottom:16px;">Add medicines to check for harmful interactions.</p>
+            <label>Add Medicine</label>
+            <div style="display:flex;gap:10px;margin-bottom:16px;">
+              <input type="text" id="drug-input" placeholder="e.g. Aspirin, Warfarin, Ibuprofen..." style="margin-bottom:0;flex:1;"/>
+              <button class="btn btn-primary" style="width:auto;padding:12px 20px;" onclick="addDrug()">Add</button>
+            </div>
+            <div class="drug-list" id="drug-list">
+              <div class="drug-tag" onclick="removeDrug(this)">Aspirin <span class="remove">✕</span></div>
+              <div class="drug-tag" onclick="removeDrug(this)">Warfarin <span class="remove">✕</span></div>
+              <div class="drug-tag" onclick="removeDrug(this)">Metformin <span class="remove">✕</span></div>
+            </div>
+            <div class="divider"></div>
+            <button class="btn btn-primary" onclick="checkConflicts()">🔍 Check Conflicts</button>
+            <div id="conflict-result" class="ai-result show">
+              <div class="ai-label">⚠️ CONFLICT DETECTED</div>
+              <div class="ai-text">
+                <strong>Aspirin + Warfarin:</strong> HIGH RISK — Combined use significantly increases bleeding risk. Both are anticoagulants and should not be prescribed together without specialist oversight.<br><br>
+                <strong>Metformin:</strong> No conflict detected with current list. Safe to continue.<br><br>
+                <span style="color:var(--green);font-weight:600;">✅ Recommendation:</span> Consult cardiologist before continuing Warfarin + Aspirin combination.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RISK PREDICTOR -->
+        <div id="aitab-risk" class="hidden">
+          <div class="card">
+            <div class="section-title">📊 Patient Risk Predictor</div>
+            <div class="form-row">
+              <div><label>Age</label><input type="number" id="risk-age" placeholder="e.g. 55"/></div>
+              <div><label>Gender</label><select id="risk-gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+            </div>
+            <div class="form-row">
+              <div><label>BP Systolic</label><input type="number" id="risk-bp" placeholder="e.g. 155"/></div>
+              <div><label>Heart Rate</label><input type="number" id="risk-hr" placeholder="e.g. 95"/></div>
+            </div>
+            <div class="form-row">
+              <div><label>HbA1c</label><input type="number" id="risk-hba1c" placeholder="e.g. 7.2" step="0.1"/></div>
+              <div><label>Smoker?</label><select id="risk-smoke"><option>No</option><option>Yes</option><option>Ex-smoker</option></select></div>
+            </div>
+            <label>Known Conditions</label>
+            <input type="text" placeholder="e.g. Diabetes, Hypertension, Cardiac..."/>
+            <button class="btn btn-primary" onclick="predictRisk()">🤖 Predict Risk</button>
+            <div id="risk-result" class="ai-result">
+              <div class="ai-label">🤖 AI RISK ASSESSMENT</div>
+              <div class="ai-text" id="risk-text"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  ICU BEDS DASHBOARD                                       -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="icu-dash" class="screen">
+  <div class="dash-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><div class="logo-icon">🏨</div> ICU Finder</div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active"><span>🗺️</span> Beds Near Me</button>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-back" style="padding-left:12px;" onclick="logout()">← Logout</button>
+      </div>
+    </aside>
+    <main class="dash-main">
+      <div class="topbar">
+        <div style="font-size:1.12rem;font-weight:700;">ICU Beds Near Me</div>
+        <div class="meta"><span class="pulse-dot green"></span>Live Data</div>
+      </div>
+      <div class="dash-content">
+        <div class="stats-row">
+          <div class="stat-card accent">
+            <div class="s-label">Total ICU Beds Nearby</div>
+            <div class="s-val">47</div>
+            <div class="s-sub">Within 10km radius</div>
+          </div>
+          <div class="stat-card">
+            <div class="s-label">Available Now</div>
+            <div class="s-val" style="color:var(--green)">19</div>
+            <div class="s-sub">40% occupancy</div>
+          </div>
+          <div class="stat-card">
+            <div class="s-label">Hospitals Checked</div>
+            <div class="s-val">6</div>
+            <div class="s-sub">Last updated: 2 min ago</div>
+          </div>
+        </div>
+
+        <div class="map-mock" style="height:160px;">
+          <div class="map-pin">📍</div>
+          <div class="map-label">Your Location</div>
+        </div>
+
+        <div class="section-title">Hospital ICU Availability</div>
+        <div class="bed-grid">
+          <div class="bed-card">
+            <div class="hospital">City General Hospital</div>
+            <div class="dist">1.2 km · Trauma Level I</div>
+            <div class="beds ok">8</div>
+            <div class="beds-label"><span class="pulse-dot green"></span>ICU Available</div>
+          </div>
+          <div class="bed-card">
+            <div class="hospital">Apollo Medical Centre</div>
+            <div class="dist">2.8 km · Multi-Specialty</div>
+            <div class="beds ok">5</div>
+            <div class="beds-label"><span class="pulse-dot green"></span>ICU Available</div>
+          </div>
+          <div class="bed-card">
+            <div class="hospital">AIIMS Emergency Wing</div>
+            <div class="dist">4.1 km · Super Specialty</div>
+            <div class="beds crit">0</div>
+            <div class="beds-label"><span class="pulse-dot red"></span>ICU Full</div>
+          </div>
+          <div class="bed-card">
+            <div class="hospital">Medanta Hospital</div>
+            <div class="dist">5.5 km · Cardiac Centre</div>
+            <div class="beds ok">6</div>
+            <div class="beds-label"><span class="pulse-dot green"></span>ICU Available</div>
+          </div>
+          <div class="bed-card">
+            <div class="hospital">Fortis Hospital</div>
+            <div class="dist">6.2 km · General</div>
+            <div class="beds warn">2</div>
+            <div class="beds-label"><span class="pulse-dot amber"></span>Almost Full</div>
+          </div>
+          <div class="bed-card">
+            <div class="hospital">Max Healthcare</div>
+            <div class="dist">8.0 km · Multi-Specialty</div>
+            <div class="beds ok">7</div>
+            <div class="beds-label"><span class="pulse-dot green"></span>ICU Available</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--  JAVASCRIPT                                               -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<script>
+  // ── State ──
+  let currentPortal = null;
+  let currentUser   = { name: '', id: '' };
+
+  // ── Auth configs ──
+  const authConfig = {
+    doctor: {
+      icon: '👨‍⚕️', iconClass: 'icon-doc',
+      title: 'Doctor Portal', sub: 'Sign in with your Medical ID',
+      fields: [
+        { id: 'doc-name', label: 'Full Name', placeholder: 'Dr. Priya Anand', type: 'text' },
+        { id: 'doc-id',   label: 'Medical Registration ID', placeholder: 'MCI-2024-XXXXX', type: 'text' },
+      ],
+      btnLabel: 'Sign In as Doctor', dash: 'doctor-dash'
+    },
+    patient: {
+      icon: '🧑‍🦰', iconClass: 'icon-pat',
+      title: 'Patient Portal', sub: 'Sign in to view your health records',
+      fields: [
+        { id: 'pat-name', label: 'Full Name', placeholder: 'Your full name', type: 'text' },
+        { id: 'pat-pass', label: 'Password', placeholder: '••••••••', type: 'password' },
+      ],
+      btnLabel: 'Sign In as Patient', dash: 'patient-dash'
+    },
+    emergency: {
+      icon: '🚑', iconClass: 'icon-emg',
+      title: 'Emergency / Pre-Med', sub: 'Paramedic & Ambulance access',
+      fields: [
+        { id: 'emg-unit', label: 'Unit / Ambulance ID', placeholder: 'AMB-0042', type: 'text' },
+        { id: 'emg-code', label: 'Access Code', placeholder: '••••••', type: 'password' },
+      ],
+      btnLabel: 'Enter Emergency Mode', dash: 'emergency-dash'
+    },
+    ai: {
+      icon: '🤖', iconClass: 'icon-ai',
+      title: 'AI Medicine Check', sub: 'Drug interaction & risk analysis',
+      fields: [
+        { id: 'ai-name', label: 'Name / ID', placeholder: 'Your name or staff ID', type: 'text' },
+      ],
+      btnLabel: 'Access AI Tools', dash: 'ai-dash'
+    },
+    icu: {
+      icon: '🏨', iconClass: 'icon-icu',
+      title: 'ICU Bed Finder', sub: 'Real-time hospital capacity near you',
+      fields: [
+        { id: 'icu-name', label: 'Your Name', placeholder: 'Name or Patient ID', type: 'text' },
+      ],
+      btnLabel: 'Find ICU Beds', dash: 'icu-dash'
+    }
+  };
+
+  function showAuth(portal) {
+    currentPortal = portal;
+    const cfg = authConfig[portal];
+    const box = document.getElementById('auth-box');
+
+    let fieldsHTML = cfg.fields.map(f => `
+      <label for="${f.id}">${f.label}</label>
+      <input type="${f.type}" id="${f.id}" placeholder="${f.placeholder}" autocomplete="off"/>
+    `).join('');
+
+    box.innerHTML = `
+      <button class="btn-back" onclick="backToLanding()">← Back to Home</button>
+      <div class="auth-icon ${cfg.iconClass}">${cfg.icon}</div>
+      <h2>${cfg.title}</h2>
+      <div class="sub">${cfg.sub}</div>
+      ${fieldsHTML}
+      <button class="btn btn-primary" onclick="doLogin('${portal}')">
+        ${cfg.btnLabel}
+      </button>
+    `;
+
+    hide('landing'); show('auth-screen');
+  }
+
+  function doLogin(portal) {
+    const cfg   = authConfig[portal];
+    const first = document.getElementById(cfg.fields[0].id);
+    const name  = first ? first.value.trim() : 'User';
+    if (!name) { first.focus(); first.style.borderColor='var(--red)'; return; }
+
+    currentUser.name = name;
+
+    // Set avatar chips
+    if (portal === 'doctor') {
+      setText('doc-name-chip', name);
+      setText('doc-avatar', name.slice(0,2).toUpperCase());
+      setText('doc-date', new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'}));
+    }
+    if (portal === 'patient') {
+      setText('pat-name-chip', name);
+      setText('pat-avatar', name.slice(0,1).toUpperCase());
+      setText('pat-date', new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'}));
+    }
+
+    hide('auth-screen');
+    show(cfg.dash);
+  }
+
+  function backToLanding() { hide('auth-screen'); show('landing'); }
+  function logout() {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    show('landing');
+  }
+
+  // ── Tab switchers ──
+  function switchTab(prefix, tab, btn, allTabs) {
+    allTabs.forEach(t => {
+      const el = document.getElementById(prefix + t);
+      if (el) el.classList.add('hidden');
+    });
+    document.getElementById(prefix + tab).classList.remove('hidden');
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function docTab(tab, btn) {
+    switchTab('tab-', tab, btn, ['overview','patients','timeline','alerts','commit']);
+  }
+  function patTab(tab, btn) {
+    switchTab('ptab-', tab, btn, ['overview','records','prescriptions','consent','translator']);
+  }
+  function emgTab(tab, btn) {
+    switchTab('etab-', tab, btn, ['vitals','route','crowd']);
+    setText('emg-tab-title', {
+      vitals:'Upload Patient Vitals', route:'Hospital Routing', crowd:'Crowd Alert System'
+    }[tab]);
+  }
+  function aiTab(tab, btn) {
+    switchTab('aitab-', tab, btn, ['conflict','risk']);
+  }
+
+  // ── Feature functions ──
+  function createCommit() {
+    show('commit-success');
+  }
+
+  function translatePrescription() {
+    show('trans-result');
+  }
+
+  function analyzeVitals() {
+    const hr    = document.getElementById('emg-hr').value    || '110';
+    const bp    = document.getElementById('emg-bp').value    || '160/100';
+    const spo2  = document.getElementById('emg-spo2').value  || '88';
+    const temp  = document.getElementById('emg-temp').value  || '101.2';
+
+    let risk = 'MODERATE', color = 'var(--amber)';
+    if (parseInt(spo2) < 90 || parseInt(hr) > 120) { risk = 'CRITICAL'; color = 'var(--red)'; }
+    else if (parseInt(hr) < 100 && parseInt(spo2) > 94) { risk = 'LOW'; color = 'var(--green)'; }
+
+    const el = document.getElementById('vitals-result');
+    const tx = document.getElementById('vitals-text');
+    tx.innerHTML = `
+      <strong style="color:${color};">Risk Level: ${risk}</strong><br><br>
+      HR: ${hr} bpm | BP: ${bp} | SpO₂: ${spo2}% | Temp: ${temp}°F<br><br>
+      ${risk === 'CRITICAL' ? '🚨 Immediate intervention required. Pre-alert sent to City General Hospital. ETA cardiologist: 8 min.' : 
+        risk === 'MODERATE' ? '⚠️ Monitor closely. Prepare IV access. Recommend City General (8 ICU beds available).' :
+        '✅ Patient stable. Standard monitoring protocol. Route to nearest clinic.'}
+    `;
+    el.classList.add('show');
+  }
+
+  function sendCrowdAlert() {
+    show('crowd-result');
+  }
+
+  function addDrug() {
+    const input = document.getElementById('drug-input');
+    const val = input.value.trim();
+    if (!val) return;
+    const list = document.getElementById('drug-list');
+    const tag = document.createElement('div');
+    tag.className = 'drug-tag';
+    tag.innerHTML = val + ' <span class="remove">✕</span>';
+    tag.onclick = () => removeDrug(tag);
+    list.appendChild(tag);
+    input.value = '';
+  }
+
+  function removeDrug(el) { el.remove(); }
+
+  function checkConflicts() {
+    show('conflict-result');
+  }
+
+  function predictRisk() {
+    const age   = document.getElementById('risk-age').value   || '55';
+    const bp    = document.getElementById('risk-bp').value    || '155';
+    const hr    = document.getElementById('risk-hr').value    || '95';
+    const hba1c = document.getElementById('risk-hba1c').value || '7.2';
+    const smoke = document.getElementById('risk-smoke').value;
+
+    let cardiacRisk = 40, diabetesRisk = 30, hospRisk = 25;
+    if (parseInt(bp) > 140) cardiacRisk += 20;
+    if (parseFloat(hba1c) > 6.5) diabetesRisk += 30;
+    if (smoke === 'Yes') { cardiacRisk += 15; hospRisk += 10; }
+    if (parseInt(age) > 60) { cardiacRisk += 10; hospRisk += 10; }
+
+    const txt = document.getElementById('risk-text');
+    txt.innerHTML = `
+      <strong>Patient Profile:</strong> Age ${age}, BP ${bp} mmHg, HR ${hr} bpm, HbA1c ${hba1c}%, ${smoke === 'Yes' ? 'Smoker' : 'Non-smoker'}<br><br>
+      <div style="margin-top:10px;">
+        <div style="margin-bottom:8px;"><strong>Cardiac Risk:</strong> <span style="color:${cardiacRisk > 60 ? 'var(--red)' : 'var(--amber)'};">${Math.min(cardiacRisk,95)}%</span></div>
+        <div style="margin-bottom:8px;"><strong>Diabetes Complication Risk:</strong> <span style="color:${diabetesRisk > 50 ? 'var(--amber)' : 'var(--green)'};">${Math.min(diabetesRisk,95)}%</span></div>
+        <div style="margin-bottom:8px;"><strong>Hospitalisation Risk (6mo):</strong> <span style="color:${hospRisk > 40 ? 'var(--amber)' : 'var(--green)'};">${Math.min(hospRisk,95)}%</span></div>
+      </div>
+      <br><span style="color:var(--green);font-weight:600;">💡 Recommendation:</span> ${cardiacRisk > 60 ? 'Refer to cardiologist immediately. Consider ECG and stress test.' : 'Lifestyle modification advised. Quarterly monitoring recommended.'}
+    `;
+    show('risk-result');
+  }
+
+  // ── Helpers ──
+  function show(id)     { const el = document.getElementById(id); if(el){ el.style.display=''; el.classList.add('active'); } }
+  function hide(id)     { const el = document.getElementById(id); if(el){ el.classList.remove('active'); el.style.display='none'; } }
+  function setText(id,t){ const el = document.getElementById(id); if(el) el.textContent = t; }
+
+  // Init
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('landing').style.display = 'flex';
+  });
+</script>
+</body>
+</html>
